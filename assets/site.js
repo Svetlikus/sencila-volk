@@ -4,6 +4,7 @@
   const hr = document.documentElement.lang === 'hr';
   const words = hr ? {
     menu: 'Izbornik', close: 'Zatvori izbornik',
+    products: 'Odaberite barem jedno rješenje.',
     type: 'Odaberite fotografiju u formatu JPG, PNG ili WebP.',
     size: 'Ukupna veličina fotografija može biti najviše 10 MB. Odaberite manje fotografije.',
     sending: 'Slanje…', remove: 'Ukloni fotografiju',
@@ -12,6 +13,7 @@
     slow: 'Slanje traje dulje. Ako se stranica ne otvori, provjerite internetsku vezu. Za pomoć nam pišite na info@sencilavolk.si.'
   } : {
     menu: 'Meni', close: 'Zapri meni',
+    products: 'Izberite vsaj eno rešitev.',
     type: 'Izberite fotografijo v obliki JPG, PNG ali WebP.',
     size: 'Skupna velikost fotografij je lahko največ 10 MB. Izberite manjše fotografije.',
     sending: 'Pošiljanje…', remove: 'Odstrani fotografijo',
@@ -42,15 +44,38 @@
   });
   window.matchMedia('(min-width: 1101px)').addEventListener('change', () => closeMenu());
 
-  const product = document.getElementById('product');
-  document.querySelectorAll('[data-product]').forEach(link => {
-    link.addEventListener('click', () => {
-      if (product) product.value = link.dataset.product;
-    });
-  });
-
   const form = document.getElementById('inquiry-form');
   if (!form) return;
+  const products = [...form.querySelectorAll('input[data-solution]')];
+  const productsError = document.getElementById('solutions-error');
+  function checkProducts(showError = false) {
+    if (!products.length) return '';
+    const error = products.some(input => input.checked) ? '' : words.products;
+    // Validate the group through one focusable checkbox. Adding `required` to
+    // every checkbox would incorrectly require visitors to select all products.
+    products[0].setCustomValidity(error);
+    const invalid = showError && !!error;
+    productsError.textContent = invalid ? error : '';
+    productsError.hidden = !invalid;
+    if (invalid) products[0].setAttribute('aria-invalid', 'true');
+    else products[0].removeAttribute('aria-invalid');
+    return error;
+  }
+  products.forEach(input => input.addEventListener('change', () => checkProducts()));
+  products[0]?.addEventListener('invalid', () => checkProducts(true));
+  document.querySelectorAll('[data-product]').forEach(link => {
+    link.addEventListener('click', () => {
+      const choice = products.find(input => input.dataset.solution === link.dataset.product);
+      if (choice) {
+        choice.checked = true;
+        checkProducts();
+      }
+    });
+  });
+  checkProducts();
+  // Recheck values restored by the browser when returning from the form service.
+  window.addEventListener('pageshow', () => checkProducts());
+  form.addEventListener('reset', () => queueMicrotask(() => checkProducts()));
   const status = document.getElementById('form-status');
   const files = [...form.querySelectorAll('input[type="file"]')];
   const allowed = new Set(['image/jpeg', 'image/png', 'image/webp']);
@@ -125,7 +150,7 @@
   }
   window.addEventListener('pageshow', restoreSubmit);
   form.addEventListener('submit', e => {
-    const error = checkFiles();
+    const error = checkProducts(true) || checkFiles();
     if (!isHosted || !navigator.onLine || error) {
       e.preventDefault();
       announce(!isHosted ? words.local : !navigator.onLine ? words.offline : error);

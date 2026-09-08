@@ -73,7 +73,7 @@ CONTENT = {
   'contact_small':'Raje najprej pokličete?', 'phone':'030 305 338',
   'form_legend':'Povpraševanje brez obveznosti', 'required_note':'Polja z * so obvezna.',
   'fields':{'product':'Kaj vas zanima?','name':'Ime in priimek','email':'E-pošta','phone':'Telefon','location':'Kraj montaže','measurements':'Okvirne mere','message':'Vaše želje'},
-  'select':'Izberite rešitev', 'unsure':'Potrebujem nasvet / več rešitev', 'service':'Servis izdelkov Senčila Volk',
+  'solutions_hint':'Izberite eno ali več rešitev.', 'unsure':'Potrebujem nasvet', 'service':'Servis izdelkov Senčila Volk',
   'optional':'neobvezno','phone_hint':'Za lažji dogovor.', 'location_ph':'npr. Ljubljana, Pula ali Zadar',
   'measurements_ph':'npr. terasa 4 × 3 m ali okno 180 × 150 cm',
   'message_ph':'Kaj želite zasenčiti? Imate v mislih določeno izvedbo, barvo ali okviren termin?',
@@ -136,7 +136,7 @@ CONTENT = {
   'contact_small':'Radije biste prvo nazvali?','phone':'+386 30 305 338',
   'form_legend':'Upit bez obveze','required_note':'Polja s * su obvezna.',
   'fields':{'product':'Što vas zanima?','name':'Ime i prezime','email':'E-pošta','phone':'Telefon','location':'Mjesto montaže','measurements':'Okvirne mjere','message':'Vaše želje'},
-  'select':'Odaberite rješenje','unsure':'Trebam savjet / više rješenja','service':'Servis proizvoda Senčila Volk',
+  'solutions_hint':'Odaberite jedno ili više rješenja.','unsure':'Trebam savjet','service':'Servis proizvoda Senčila Volk',
   'optional':'neobvezno','phone_hint':'Za lakši dogovor.','location_ph':'npr. Pula, Zadar ili Ljubljana',
   'measurements_ph':'npr. terasa 4 × 3 m ili prozor 180 × 150 cm',
   'message_ph':'Što želite zasjeniti? Imate li na umu određenu izvedbu, boju ili okviran termin?',
@@ -151,7 +151,8 @@ CONTENT = {
  }
 }
 
-def head(lang, title, desc, prefix):
+def head(lang, title, desc, prefix, asset_version=''):
+    asset_query = f'?v={asset_version}' if asset_version else ''
     return f'''<!doctype html>
 <html lang="{lang}">
 <head>
@@ -168,8 +169,8 @@ def head(lang, title, desc, prefix):
   <meta property="og:title" content="{escape(title, quote=True)}">
   <meta property="og:description" content="{escape(desc, quote=True)}">
   <link rel="icon" href="{prefix}assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="{prefix}assets/styles.css">
-  <script src="{prefix}assets/site.js" defer></script>
+  <link rel="stylesheet" href="{prefix}assets/styles.css{asset_query}">
+  <script src="{prefix}assets/site.js{asset_query}" defer></script>
 </head>'''
 
 def brand(prefix, light=False):
@@ -228,14 +229,21 @@ def main_page(lang,t,prefix):
     faqs=''.join(f'<details><summary>{q}{icon("plus")}</summary><p>{a}</p></details>' for q,a in t['faqs'])
     badges=''.join(f'<span>{icon("pin")}{x}</span>' for x in t['coverage_badges'])
     options=[('screen-roloji',t['screen_title']),('pergole',t['pergola_title'])]+[(a,b) for a,b,_ in t['other']]+[('servis',t['service']),('nasvet',t['unsure'])]
-    options=''.join(f'<option value="{v}">{label}</option>' for v,label in options)
+    # Each checkbox has a distinct submitted name so the email service retains
+    # every choice, including when JavaScript is unavailable.
+    options='\n'.join(
+        f'<label class="solution-option{" solution-option-wide" if v in ("servis", "nasvet") else ""}" for="solution-{v}">'
+        f'<input id="solution-{v}" type="checkbox" name="Resitev {i} / Rjesenje {i}" value="{escape(label, quote=True)}" data-solution="{v}" aria-describedby="solutions-hint solutions-error">'
+        f'<span>{escape(label)}</span></label>'
+        for i,(v,label) in enumerate(options,1)
+    )
     fields=t['fields']
     file_rows=''
     for i in range(1,4):
         if i==2: file_rows+=f'<details class="extra-photos"><summary>{t["photo_more"]}{icon("plus")}</summary>'
         file_rows+=f'''<div class="file-row"><label for="photo-{i}">{icon('upload')}<span data-filename>{t['photo']} {i}</span></label><input id="photo-{i}" type="file" name="attachment{'' if i==1 else i}" accept="image/jpeg,image/png,image/webp" aria-describedby="photo-hint"><button type="button" class="remove-file" aria-label="{t['remove']} {i}" hidden>{icon('close')}</button></div>'''
     file_rows+='</details>'
-    return f'''{head(lang,t['title'],t['desc'],prefix)}
+    return f'''{head(lang,t['title'],t['desc'],prefix,asset_version='multi-solutions-1')}
 <body id="top">
 {header(lang,t,prefix)}
 <main id="main">
@@ -270,7 +278,12 @@ def main_page(lang,t,prefix):
    <input type="hidden" name="_subject" value="Senčila Volk — novo povpraševanje / upit ({lang.upper()})">
    <input type="hidden" name="_template" value="table"><input type="hidden" name="Jezik / Jezik" value="{'Slovenščina' if lang=='sl' else 'Hrvatski'}">
    <div class="honey" aria-hidden="true"><label for="website">Website</label><input id="website" type="text" name="_honey" tabindex="-1" autocomplete="off"></div>
-   <div class="field"><label for="product">{fields['product']} <span aria-hidden="true">*</span></label><select id="product" name="Izdelek / Proizvod" required><option value="" selected disabled>{t['select']}</option>{options}</select></div>
+   <fieldset class="solution-field" aria-describedby="solutions-hint">
+    <legend>{fields['product']} <span aria-hidden="true">*</span></legend>
+    <p id="solutions-hint" class="solutions-hint">{t['solutions_hint']}</p>
+    <div class="solution-options">{options}</div>
+    <p id="solutions-error" class="solutions-error" hidden></p>
+   </fieldset>
    <div class="form-row"><div class="field"><label for="name">{fields['name']} <span aria-hidden="true">*</span></label><input id="name" name="Ime / Ime" autocomplete="name" maxlength="120" required></div><div class="field"><label for="email">{fields['email']} <span aria-hidden="true">*</span></label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" required></div></div>
    <div class="form-row"><div class="field"><label for="phone">{fields['phone']} <span class="optional">({t['optional']})</span></label><input id="phone" name="Telefon" type="tel" autocomplete="tel" maxlength="40"></div><div class="field"><label for="location">{fields['location']} <span aria-hidden="true">*</span></label><input id="location" name="Kraj / Mjesto" autocomplete="address-level2" placeholder="{t['location_ph']}" maxlength="180" required></div></div>
    <div class="field"><label for="measurements">{fields['measurements']} <span class="optional">({t['optional']})</span></label><input id="measurements" name="Okvirne mere / mjere" placeholder="{t['measurements_ph']}" maxlength="300"></div>

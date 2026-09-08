@@ -14,8 +14,8 @@
   <meta property="og:title" content="Senčila Volk | Screen roloji, pergole in senčila po meri">
   <meta property="og:description" content="Dobava, montaža in servis senčil. Screen roloji, pergole, rolete, žaluzije, tende in komarniki. Več kot 10 let izkušenj, 5-letna garancija. Slovenija, Istra in Dalmacija.">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/styles.css">
-  <script src="./assets/site.js" defer></script>
+  <link rel="stylesheet" href="./assets/styles.css?v=multi-solutions-1">
+  <script src="./assets/site.js?v=multi-solutions-1" defer></script>
 </head>
 <body id="top">
 <a class="skip" href="#main">Na vsebino</a>
@@ -72,7 +72,20 @@
    <input type="hidden" name="_subject" value="Senčila Volk — novo povpraševanje / upit (SL)">
    <input type="hidden" name="_template" value="table"><input type="hidden" name="Jezik / Jezik" value="Slovenščina">
    <div class="honey" aria-hidden="true"><label for="website">Website</label><input id="website" type="text" name="_honey" tabindex="-1" autocomplete="off"></div>
-   <div class="field"><label for="product">Kaj vas zanima? <span aria-hidden="true">*</span></label><select id="product" name="Izdelek / Proizvod" required><option value="" selected disabled>Izberite rešitev</option><option value="screen-roloji">Screen roloji</option><option value="pergole">Pergole</option><option value="zunanje-zaluzije">Zunanje žaluzije</option><option value="rolete">Rolete</option><option value="komarniki">Komarniki</option><option value="tende">Tende</option><option value="notranja-sencila">Notranja senčila</option><option value="servis">Servis izdelkov Senčila Volk</option><option value="nasvet">Potrebujem nasvet / več rešitev</option></select></div>
+   <fieldset class="solution-field" aria-describedby="solutions-hint">
+    <legend>Kaj vas zanima? <span aria-hidden="true">*</span></legend>
+    <p id="solutions-hint" class="solutions-hint">Izberite eno ali več rešitev.</p>
+    <div class="solution-options"><label class="solution-option" for="solution-screen-roloji"><input id="solution-screen-roloji" type="checkbox" name="Resitev 1 / Rjesenje 1" value="Screen roloji" data-solution="screen-roloji" aria-describedby="solutions-hint solutions-error"><span>Screen roloji</span></label>
+<label class="solution-option" for="solution-pergole"><input id="solution-pergole" type="checkbox" name="Resitev 2 / Rjesenje 2" value="Pergole" data-solution="pergole" aria-describedby="solutions-hint solutions-error"><span>Pergole</span></label>
+<label class="solution-option" for="solution-zunanje-zaluzije"><input id="solution-zunanje-zaluzije" type="checkbox" name="Resitev 3 / Rjesenje 3" value="Zunanje žaluzije" data-solution="zunanje-zaluzije" aria-describedby="solutions-hint solutions-error"><span>Zunanje žaluzije</span></label>
+<label class="solution-option" for="solution-rolete"><input id="solution-rolete" type="checkbox" name="Resitev 4 / Rjesenje 4" value="Rolete" data-solution="rolete" aria-describedby="solutions-hint solutions-error"><span>Rolete</span></label>
+<label class="solution-option" for="solution-komarniki"><input id="solution-komarniki" type="checkbox" name="Resitev 5 / Rjesenje 5" value="Komarniki" data-solution="komarniki" aria-describedby="solutions-hint solutions-error"><span>Komarniki</span></label>
+<label class="solution-option" for="solution-tende"><input id="solution-tende" type="checkbox" name="Resitev 6 / Rjesenje 6" value="Tende" data-solution="tende" aria-describedby="solutions-hint solutions-error"><span>Tende</span></label>
+<label class="solution-option" for="solution-notranja-sencila"><input id="solution-notranja-sencila" type="checkbox" name="Resitev 7 / Rjesenje 7" value="Notranja senčila" data-solution="notranja-sencila" aria-describedby="solutions-hint solutions-error"><span>Notranja senčila</span></label>
+<label class="solution-option solution-option-wide" for="solution-servis"><input id="solution-servis" type="checkbox" name="Resitev 8 / Rjesenje 8" value="Servis izdelkov Senčila Volk" data-solution="servis" aria-describedby="solutions-hint solutions-error"><span>Servis izdelkov Senčila Volk</span></label>
+<label class="solution-option solution-option-wide" for="solution-nasvet"><input id="solution-nasvet" type="checkbox" name="Resitev 9 / Rjesenje 9" value="Potrebujem nasvet" data-solution="nasvet" aria-describedby="solutions-hint solutions-error"><span>Potrebujem nasvet</span></label></div>
+    <p id="solutions-error" class="solutions-error" hidden></p>
+   </fieldset>
    <div class="form-row"><div class="field"><label for="name">Ime in priimek <span aria-hidden="true">*</span></label><input id="name" name="Ime / Ime" autocomplete="name" maxlength="120" required></div><div class="field"><label for="email">E-pošta <span aria-hidden="true">*</span></label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" required></div></div>
    <div class="form-row"><div class="field"><label for="phone">Telefon <span class="optional">(neobvezno)</span></label><input id="phone" name="Telefon" type="tel" autocomplete="tel" maxlength="40"></div><div class="field"><label for="location">Kraj montaže <span aria-hidden="true">*</span></label><input id="location" name="Kraj / Mjesto" autocomplete="address-level2" placeholder="npr. Ljubljana, Pula ali Zadar" maxlength="180" required></div></div>
    <div class="field"><label for="measurements">Okvirne mere <span class="optional">(neobvezno)</span></label><input id="measurements" name="Okvirne mere / mjere" placeholder="npr. terasa 4 × 3 m ali okno 180 × 150 cm" maxlength="300"></div>

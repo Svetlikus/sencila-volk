@@ -111,6 +111,19 @@ summary::-webkit-details-marker{display:none}.faq-list summary .icon{width:18px;
 .field input::placeholder,.field textarea::placeholder{color:#787770;opacity:1;font-size:.875rem;line-height:1.5}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--ink);outline:2px solid #201e1d;outline-offset:1px}.field textarea{resize:vertical;min-height:110px;line-height:1.5}
 .field select{padding-right:30px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}.honey{display:none}
+.solution-field{padding:0;border:0;margin:0 0 24px;min-width:0}
+.solution-field legend{font-size:.875rem;font-weight:600;line-height:1.45;margin-bottom:6px;padding:0}
+.solutions-hint{font-size:.875rem;line-height:1.5;color:var(--muted);margin:0 0 12px}
+.solution-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:8px}
+.solution-option{display:flex;align-items:flex-start;gap:10px;min-width:0;min-height:48px;padding:12px;background:#fcfcfa;border:1px solid #c8c8c0;border-radius:2px;cursor:pointer;font-size:.875rem;line-height:1.5}
+.solution-option-wide{grid-column:1/-1}
+.solution-option input{width:18px;height:18px;margin:2px 0 0;flex:none;accent-color:var(--red);cursor:pointer}
+.solution-option span{overflow-wrap:anywhere}
+.solution-option:hover{border-color:var(--ink)}
+.solution-option:has(input:checked){border-color:var(--red);background:#fff5f5}
+.solution-option input:checked+span{font-weight:600}
+.solution-option:focus-within{outline:2px solid var(--red);outline-offset:2px}
+.solutions-error{color:var(--red-dark);font-size:.875rem;line-height:1.5;margin:10px 0 0}
 .photo-field{padding:0;border:0;margin:0 0 24px;min-width:0}.photo-field>p{font-size:.75rem;color:var(--muted);line-height:1.5;margin:0 0 12px}
 .file-row{position:relative;display:flex;align-items:center;border:1px dashed #bfbfb5;min-height:55px;background:#fcfcfa;margin-bottom:9px;min-width:0}
 .file-row>label{display:flex;align-items:center;gap:12px;padding:14px;flex:1;min-width:0;font-size:.84rem;cursor:pointer;line-height:1.3}
